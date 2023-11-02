@@ -101,14 +101,22 @@ def sentence3() -> Expr:
     """
     "*** BEGIN YOUR CODE HERE ***"
 
-    a = logic.PropSymbolExpr("WumpusAlive[1]")
-    b = logic.PropSymbolExpr("WumpusAlive[0]")
-    c = logic.PropSymbolExpr("WumpusBorn[0]")
-    d = logic.PropSymbolExpr("WumpusKilled[0]")
-    c1 = a % ((b & ~d) | (~b & c))
-    c2 = ~(b & c)
-    c3 = c
-    return logic.conjoin(c1,c2,c3)
+    A = PropSymbolExpr("PacmanAlive_1")
+    B = PropSymbolExpr("PacmanAlive_0")
+    C = PropSymbolExpr("PacmanBorn_0")
+    D = PropSymbolExpr("PacmanKilled_0")
+    p1 = B & ~D
+    p2 = ~B & C
+    p3 = p1 | p2
+
+    p4 = A % p3
+
+    p5 = ~(B & C)
+
+    p6 = C
+
+    result = conjoin(p4, p5, p6)
+    return result
 
     "*** END YOUR CODE HERE ***"
 
@@ -123,9 +131,19 @@ def findModelUnderstandingCheck() -> Dict[Expr, bool]:
     """Returns the result of findModel(Expr('a')) if lower cased expressions were allowed.
     You should not use findModel or Expr in this method.
     """
-    a = Expr('A')
+
+    class dummyClass:
+        """dummy('A') has representation A, unlike a string 'A' that has repr 'A'.
+        Of note: Expr('Name') has representation Name, not 'Name'.
+        """
+
+        def __init__(self, variable_name: str = 'A'):
+            self.variable_name = variable_name
+
+        def __repr__(self):
+            return self.variable_name
     "*** BEGIN YOUR CODE HERE ***"
-    return {a: True}
+    return {dummyClass('a'): True}
     "*** END YOUR CODE HERE ***"
 
 def entails(premise: Expr, conclusion: Expr) -> bool:
